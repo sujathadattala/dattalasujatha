@@ -1,0 +1,74 @@
+<div class="text-center"><h2> Contacts App</h2></div>
+<div class="container">
+  <div class="d-flex justify-content-front mb-2">
+    <button (click)="openModal()" class="btn btn-success">New</button>
+  </div>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Firstname</th>
+        <th>Lastname</th>
+        <th>Email</th>
+        <th>Edit</th>
+        <th>Delete</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let contact of contacts">
+        <td>{{ contact.id }}</td>
+        <td>{{ contact.firstname }}</td>
+        <td>{{ contact.lastname }}</td>
+        <td>{{ contact.emailId}}</td>
+        <td><button (click)="openModal(contact)" class="btn btn-primary">Edit</button></td>
+        <td><button (click)="deleteContact(contact.id)" class="btn btn-danger">Delete</button></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div *ngIf="successMessage" class="alert alert-success" role="alert">
+  {{ successMessage }}
+</div>
+
+<!-- Modal for Adding/Editing Contact -->
+<div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show d-block': showModal}" aria-labelledby="addContactModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addContactModalLabel">{{ isEditing ? 'Edit Contact' : 'Add New Contact' }}</h5>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="close" (click)="closeModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="saveNewContact()" #contactForm="ngForm">
+          <div class="form-group">
+            <label for="firstname">First Name</label>
+            <input type="text" class="form-control" id="firstname" [(ngModel)]="newContact.firstname" name="firstname" required minlength="2">
+            <div *ngIf="contactForm.submitted || contactForm.controls['firstname']?.touched">
+              <div *ngIf="contactForm.controls['firstname']?.errors?.required" class="text-danger">First name is required.</div>
+              <div *ngIf="contactForm.controls['firstname']?.errors?.minlength" class="text-danger">First name must be at least 2 characters long.</div>
+          </div>
+          <div class="form-group">
+            <label for="lastname">Last Name</label>
+            <input type="text" class="form-control" id="lastname" [(ngModel)]="newContact.lastname" name="lastname" required minlength="2">
+            <div *ngIf="contactForm.submitted || contactForm.controls['lastname']?.touched">
+              <div *ngIf="contactForm.controls['lastname']?.errors?.required" class="text-danger">Last name is required.</div>
+              <div *ngIf="contactForm.controls['lastname']?.errors?.minlength" class="text-danger">Last name must be at least 2 characters long.</div>
+          </div>
+          <div class="form-group">
+            <label for="emailId">Email</label>
+            <input type="email" class="form-control" id="emailId" [(ngModel)]="newContact.emailId" name="emailId" required email>
+            <div *ngIf="contactForm.submitted || contactForm.controls['emailId']?.touched">
+              <div *ngIf="contactForm.controls['emailId']?.errors?.required" class="text-danger">Email is required.</div>
+              <div *ngIf="contactForm.controls['emailId']?.errors?.email" class="text-danger">Invalid email format.</div>
+            </div>
+          <br>
+          <button type="submit" class="btn btn-primary" [disabled]="contactForm.invalid">{{ isEditing ? 'Save Changes' : 'Add Contact' }}</button>
+     
+      </div>
+    </div>
+  </div>
+
+
